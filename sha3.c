@@ -8,31 +8,28 @@
  * SHA3-224, SHA3-256, SHA3-384 and SHA3-512.
  */
 
-typedef unsigned char u8;
-typedef unsigned long long u64;
-
-static u64
-ROL(u64 a, u8 n)
+static unsigned long long
+ROL(unsigned long long a, unsigned char n)
 {
     return (a << n) | (a >> (64 - n));
 }
 
-static u64
-L64(const u8 *x)
+static unsigned long long
+L64(const unsigned char *x)
 {
-    u64 r = 0, i;
+    unsigned long long r = 0, i;
 
     for (i = 0; i < 8; ++i) {
-        r |= (u64)x[i] << 8 * i;
+        r |= (unsigned long long)x[i] << 8 * i;
     }
     return r;
 }
 
 static void
-F(u64 *s)
+F(unsigned long long *s)
 {
-    u8 x, y, j, R = 1, r, n;
-    u64 t, B[5], Y;
+    unsigned char x, y, j, R = 1, r, n;
+    unsigned long long t, B[5], Y;
 
     for (n = 0; n < 24; ++n) {
         for (x = 0; x < 5; ++x) {
@@ -76,10 +73,11 @@ F(u64 *s)
 }
 
 static void
-Keccak(u8 r, const u8 *m, u64 n, u8 p, u8 *h, u64 d)
+Keccak(unsigned char r, const unsigned char *m, unsigned long long n,
+       unsigned char p, unsigned char *h, unsigned long long d)
 {
-    u64 s[25], i;
-    u8 t[200];
+    unsigned long long s[25], i;
+    unsigned char t[200];
 
     for (i = 0; i < 25; ++i) {
         s[i] = 0;
@@ -110,42 +108,48 @@ Keccak(u8 r, const u8 *m, u64 n, u8 p, u8 *h, u64 d)
 }
 
 int
-crypto_hash_shake128(u8 *h, const u8 *m, u64 n)
+crypto_hash_shake128(unsigned char *h, const unsigned char *m,
+                     unsigned long long n)
 {
     Keccak(21 * 8, m, n, 6 + 25 * 1, h, 168);
     return 0;
 }
 
 int
-crypto_hash_shake256(u8 *h, const u8 *m, u64 n)
+crypto_hash_shake256(unsigned char *h, const unsigned char *m,
+                     unsigned long long n)
 {
     Keccak(17 * 8, m, n, 6 + 25 * 1, h, 136);
     return 0;
 }
 
 int
-crypto_hash_sha3224(u8 *h, const u8 *m, u64 n)
+crypto_hash_sha3224(unsigned char *h, const unsigned char *m,
+                    unsigned long long n)
 {
     Keccak(18 * 8, m, n, 6 + 25 * 0, h, 28);
     return 0;
 }
 
 int
-crypto_hash_sha3256(u8 *h, const u8 *m, u64 n)
+crypto_hash_sha3256(unsigned char *h, const unsigned char *m,
+                    unsigned long long n)
 {
     Keccak(17 * 8, m, n, 6 + 25 * 0, h, 32);
     return 0;
 }
 
 int
-crypto_hash_sha3384(u8 *h, const u8 *m, u64 n)
+crypto_hash_sha3384(unsigned char *h, const unsigned char *m,
+                    unsigned long long n)
 {
     Keccak(13 * 8, m, n, 6 + 25 * 0, h, 48);
     return 0;
 }
 
 int
-crypto_hash_sha3512(u8 *h, const u8 *m, u64 n)
+crypto_hash_sha3512(unsigned char *h, const unsigned char *m,
+                    unsigned long long n)
 {
     Keccak(9 * 8, m, n, 6 + 25 * 0, h, 64);
     return 0;
